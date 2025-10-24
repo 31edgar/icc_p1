@@ -1,27 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-
 #include "linalg.h"
-
-/*
-PER FER
-----------------------------------------
-2 Feu una funció de nom prodMatVec, que calculi el producte d’una matriu per un vector.
-Feu una funci´o principal, que usant la funci´o prod, calculi el vector y = ABx i determini si y ´es m´ultiple de x. No calculeu
-el producte AB.
-S’han de llegir dos enters, m i n, una matriu real A, emmagatzemada per files, de dimensi´o m × n, una matriu real B,
-emmagatzemada per files, de dimensi´o n × m, i un vector x de m components reals.
-Caldr`a escriure A, B i x en forma de matriu, calcular el vector y = ABx i escriure’l, obtenir els m`oduls de x i y i escriure’ls
-i, finalment, determinar si y ´es m´ultiple de x, donant el missatge corresponent.
-
-
-FUNCIÑO: prodMatVec
-Paràmetres
-    A: matriu
-    B: vector
-
-*/
-
 
 int resoltrisup(int n, double **a, double *b, double *x, double tol) {
     for (int i=n-1; i >= 0; i-- ) {

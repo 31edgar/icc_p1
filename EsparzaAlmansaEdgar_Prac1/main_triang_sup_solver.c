@@ -4,12 +4,14 @@
 #include "linalg.h"
 
 int main(void){
+    // Declaración de las variables
     int n;
     printf("Dame los elementos del sistema: ");
     scanf("%d", &n);
 
     double tol, *r, *b, *x, **A;
 
+    // Reservamos espacio en la memoria para cada una de las variables
     x = (double*)malloc(n*sizeof(double));
     r = (double*)malloc(n*sizeof(double));
     b = (double*)malloc(n*sizeof(double));
@@ -17,11 +19,13 @@ int main(void){
     for (int i=0; i<n; i++)
         A[i] = (double*)malloc(n*sizeof(double));
 
+    // Nos aseguramos de que la memoria se ha asignado correctamente
     if (!x || !r || !b || !A) {
         printf("Error al asignar memoria\n");
         return 1;
     }
 
+    // Pedimos los datos
     printf("Dame las componentes del vector b\n");
     for(int i=0; i<n; i++)
         scanf("%lf", &b[i]);
@@ -35,9 +39,11 @@ int main(void){
     scanf("%lf", &tol);
 
     int isTrisupResolta = resoltrisup(n, A, b, x, tol);
-    if (isTrisupResolta) {  // si es 1, hubo un fallo
+
+    // isTrisupResolta será 1 si hubo un fallo
+    if (isTrisupResolta) {
         printf("La matriz no se pudo resolver como triangular superior.\n");
-        // liberar memoria antes de salir
+        // Liberamos la memoria antes de salir
         for(int i=0; i<n; i++) free(A[i]);
         free(A);
         free(b);
@@ -46,14 +52,20 @@ int main(void){
         return 1;
     }
 
+    // Calculamos el residuo y este se guarda en r
     residuo(n, A, b, x, r);
+
+    // Calculamos la norma2 del residuo
     double norma2 = sqrt(prod_esc(n, r, r));
 
+    // Imprimimos la solución y la norma
     printf("Solución X:\n");
     for(int i=0; i<n; i++)
         printf("%lf ", x[i]);
+
     printf("\nNorma del residuo: %e\n", norma2);
 
+    // Liberamos la memoria
     for(int i=0; i<n; i++) free(A[i]);
     free(A);
     free(b);
