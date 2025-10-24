@@ -19,6 +19,8 @@ int main(void){
     for (int i=0; i<n; i++)
         A[i] = (double*)malloc(n*sizeof(double));
 
+    for (int i=0; i<n; i++)
+        x[i] = 0;
     // Nos aseguramos de que la memoria se ha asignado correctamente
     if (!x || !r || !b || !A) {
         printf("Error al asignar memoria\n");
