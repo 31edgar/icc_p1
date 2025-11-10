@@ -7,7 +7,7 @@ int main(void){
     // Declaración de las variables
     int n;
     printf("Dame los elementos del sistema: ");
-    scanf("%d", &n);
+    scanf("%d", &n);    
 
     double tol, *r, *b, *x, **A;
 

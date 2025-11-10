@@ -3,6 +3,7 @@
 #include <math.h>
 #include "linalg.h"
 
+// 1. Resolución de sistemas triangulares
 int resoltrisup(int n, double **a, double *b, double *x, double tol) {
     int i, k;
 
@@ -69,6 +70,7 @@ void residuo(int n, double **a, double *b, double *x, double *r) {
 }
 
 void resoltriinf(int n, double **a, double *b, double *x) {
+    // Asumimos que utilizaremos esta función para resolver una matriz triangular inferior con 1s en la diagonal
     int i, j;
 
     // Recorremos cada fila
@@ -83,4 +85,35 @@ void resoltriinf(int n, double **a, double *b, double *x) {
         // Una vez tenemos la suma anterior, restamos ese valor al término independiente de la fila
         x[i] = b[i] - sum;
     }
+}
+
+// 2. Factorización LU
+int lu(int n, double **a, double tol) {
+    int i, j, k;
+    double mult;
+
+    // K representa la fila/columna donde se encuentra el pivote
+    for (k = 0; k < n - 1; k++) {
+        // Comprobamos que el pivote no sea demasiado pequeño
+        if (fabs(a[k][k]) < tol) {
+            return 1; // En ese caso no se puede continuar
+        }
+
+        // i representa cada fila de debajo del pivote
+        for (i = k + 1; i < n; i++) {
+            mult = a[i][k] / a[k][k]; // Calculamos el multiplicador
+            a[i][k] = mult; // Lo almacenamos en la parte inferior (L)
+
+            // J representa cada columna a la derecha del pivote
+            for (j = k + 1; j < n; j++) {
+                a[i][j] -= mult * a[k][j];
+            }
+        }
+
+        // En resumen, para cada pivote[k][k], iteramos por todas sus filas i
+        // A cada una, calculamos su multplicador (mult) y para cada elemento j de la fila i
+        // Le restamos el producto (mult*elemento j de la fila k, fila anterior a i) (k=i-1)
+    }
+
+    return 0; // Éxito
 }
