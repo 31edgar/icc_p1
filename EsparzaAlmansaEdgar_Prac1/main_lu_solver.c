@@ -71,10 +71,10 @@ int main(void) {
     }      
 
     // Resolvemos el sistema utilizando la factorización LU
-    int isFactoritzable = lu(n, A, tol); // 1 = error | 0 = correcto
+    int errorFactoritzacio = lu(n, A, tol); // 1 = error | 0 = correcto
 
     // CASO EN EL QUE LA MATRIZ NO SE PUEDE FACTORIZAR
-    if (isFactoritzable) {
+    if (errorFactoritzacio) {
         printf("ERROR: La matriz no se ha podido factorizar.\n");
 
         // Liberamos la memoria usada
@@ -82,8 +82,11 @@ int main(void) {
             free(A[i]);
             free(L[i]);
             free(U[i]);
+            free(A_original[i]);
+
         }
 
+        free(A_original);
         free(A);
         free(L);
         free(U);
@@ -124,9 +127,9 @@ int main(void) {
     resoltriinf(n, L, b, y);
 
     // Ahora hay que asegurarnos de que el otro sistema se puede resolver
-    int isTrisupResolta = resoltrisup(n, U, y, x, tol); // 1 = error | 0 = correcto
+    int errorResolucio = resoltrisup(n, U, y, x, tol); // 1 = error | 0 = correcto
 
-    if (isTrisupResolta) {
+    if (errorResolucio) {
         printf("ERROR: El sistema Ux = y no se pudo resolver.\n");
 
         // Liberamos la memoria usada
@@ -134,8 +137,11 @@ int main(void) {
             free(A[i]);
             free(L[i]);
             free(U[i]);
+            free(A_original[i]);
+
         }
 
+        free(A_original);
         free(A);
         free(L);
         free(U);
@@ -166,9 +172,12 @@ int main(void) {
             free(A[i]);
             free(L[i]);
             free(U[i]);
+            free(A_original[i]);
+
         }
 
         free(A);
+        free(A_original);
         free(L);
         free(U);
         free(r);

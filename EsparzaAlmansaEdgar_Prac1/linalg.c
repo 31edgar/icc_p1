@@ -38,6 +38,31 @@ void prodMatVec(int n, double **a, double *x, double *y) {
     }
 }
 
+double **prodMatMat(int n, int p, int m, double **A, double **B) {
+    // Reservem espai per la matriu resultat C (n x m)
+    double **C = (double**)malloc(n * sizeof(double*));
+    for (int i = 0; i < n; i++)
+        C[i] = (double*)malloc(m * sizeof(double));
+
+    // Calculem C = A * B
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            C[i][j] = 0.0;
+            for (int k = 0; k < p; k++) {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+
+    // Missatge informatiu sobre si BA es pot calcular
+    if (m == n)
+        printf("També és possible calcular BA (donarà una matriu de %dx%d)\n", p, p);
+    else
+        printf("No és possible calcular BA, perquè el nombre de columnes de B (%d) no coincideix amb les files d'A (%d)\n", m, n);
+
+    return C;
+}
+
 double prod_esc(int n, double *u, double *v) {
     int i;
     double sum = 0.0;
@@ -116,4 +141,52 @@ int lu(int n, double **a, double tol) {
     }
 
     return 0; // Éxito
+}
+
+// 3. Método de Gauss con pivoteo máximo por columnas
+int gausspiv(int n, double **a, double *b, double tol) {
+    for (int k = 0; k < n - 1; k++) {
+        // K es la fila donde debe estar el pivote
+        // i es la fila donde encontraremos el número con valor absoluto más alto (verdadero pivote)
+        int pivoteFila = k;
+        double maxVal = fabs(a[k][k]);
+        for (int i = k + 1; i < n; i++) {
+            if (fabs(a[i][k]) > maxVal) {
+                maxVal = fabs(a[i][k]);
+                pivoteFila = i;
+            }
+        }
+
+        // Comprobar si el pivote es menor que la tolerancia
+        if (maxVal < tol) {
+            // Matriz singular o muy mal condicionada
+            return 0; // Error, no se puede continuar
+        }
+
+        // Intercambiar filas si pivote máximo no está en la fila actual k
+        if (pivoteFila != k) {
+            // Intercambio de filas en la matriz A
+            double *tempFila = a[k];
+            a[k] = a[pivoteFila];
+            a[pivoteFila] = tempFila;
+
+            // Intercambio en el vector b
+            double tempB = b[k];
+            b[k] = b[pivoteFila];
+            b[pivoteFila] = tempB;
+        }
+
+        // Eliminación hacia abajo
+        for (int i = k + 1; i < n; i++) {
+            double factor = a[i][k] / a[k][k];
+            a[i][k] = 0.0; // explícito para claridad
+            for (int j = k + 1; j < n; j++) {
+                a[i][j] -= factor * a[k][j];
+            }
+            b[i] -= factor * b[k];
+        }
+    }
+
+    // Si se llega aquí, eliminación gaussiana con pivoteo máximo fue exitosa
+    return 1;
 }

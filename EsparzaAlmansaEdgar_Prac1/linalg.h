@@ -10,8 +10,12 @@ void residuo(int n, double **a, double *b, double *x, double *r);
 void prodMatVec(int n, double **a, double *x, double *y);
 double prod_esc(int n, double *u, double *v);
 void resoltriinf(int n, double **a, double *b, double *x);
+double **prodMatMat(int n, int p, int m, double **A, double **B);
 
 // 2. Factorización LU
 int lu(int n, double **a, double tol);
+
+// 3. Método de Gauss con pivoteo máximo por columnas
+int gausspiv(int n, double **a, double *b, double tol);
 
 #endif
