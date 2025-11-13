@@ -150,6 +150,7 @@ int gausspiv(int n, double **a, double *b, double tol) {
         // i es la fila donde encontraremos el número con valor absoluto más alto (verdadero pivote)
         int pivoteFila = k;
         double maxVal = fabs(a[k][k]);
+
         for (int i = k + 1; i < n; i++) {
             if (fabs(a[i][k]) > maxVal) {
                 maxVal = fabs(a[i][k]);
@@ -160,7 +161,7 @@ int gausspiv(int n, double **a, double *b, double tol) {
         // Comprobar si el pivote es menor que la tolerancia
         if (maxVal < tol) {
             // Matriz singular o muy mal condicionada
-            return 0; // Error, no se puede continuar
+            return 1; // Error, no se puede continuar
         }
 
         // Intercambiar filas si pivote máximo no está en la fila actual k
@@ -188,5 +189,5 @@ int gausspiv(int n, double **a, double *b, double tol) {
     }
 
     // Si se llega aquí, eliminación gaussiana con pivoteo máximo fue exitosa
-    return 1;
+    return 0;
 }
