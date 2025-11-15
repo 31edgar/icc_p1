@@ -10,36 +10,43 @@ double resolverSistema(int n, double **A, double *b, double *r, double *x, doubl
     for (int i=0; i<n; i++)
         A_original[i] = (double*)malloc(n*sizeof(double));
 
-    for (int i=0; i<n; i++) {
+    for (int i=0; i<n; i++)
         for (int j=0; j<n; j++)
             A_original[i][j] = A[i][j];
-    }
 
-    // Resolvemos el sistema
+    // Copiamos b
+    double *b_original = (double*)malloc(n*sizeof(double));
+    for (int i=0; i<n; i++)
+        b_original[i] = b[i];
+
+    // Aplicamos Gauss
     int errorEliminacio = gausspiv(n, A, b, tol);
-
-    // isTrisupResolta será 1 si hubo un fallo
     if (errorEliminacio) {
         printf("ERROR: no se pudo aplicar el método de eliminación por Gauss\n");
         return -1;
     }
 
-    int errorResolució = resoltrisup(n, A, b, x, tol);
-
-    if (errorResolució) {
+    int errorResolucio = resoltrisup(n, A, b, x, tol);
+    if (errorResolucio) {
         printf("ERROR: no se pudo resolver el sistema. \n");
-        // Liberamos la memoria antes de salir
         return -1;
     }
 
-    // Calculamos el residuo y este se guarda en r
-    residuo(n, A_original, b, x, r);
+    // Residu = A_original * x - b_original
+    residuo(n, A_original, b_original, x, r);
 
-    // Calculamos la norma2 del residuo
+    // Norma 2 del residuo
     double norma2 = sqrt(prod_esc(n, r, r));
+
+    // Liberamos memoria auxiliar
+    for (int i=0; i<n; i++)
+        free(A_original[i]);
+    free(A_original);
+    free(b_original);
 
     return norma2;
 }
+
 
 int main(void) {
     srand(time(NULL));
@@ -83,7 +90,7 @@ int main(void) {
             if (norma2 > norma2max) norma2max = norma2;
         }
 
-        fprintf(f, "%d %f\n", n, norma2max);
+        fprintf(f, "%d %.15e\n", n, norma2max);
 
 
         for (int k=0; k<n; k++)
